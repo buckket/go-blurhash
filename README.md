@@ -19,7 +19,7 @@ Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 
 ### From source
 
-    go get -u git.buckket.org/buckket/go-blurhash
+    go get -u github.com/buckket/go-blurhash
 
 ## Usage
 
