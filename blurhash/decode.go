@@ -8,9 +8,16 @@ import (
 	"math"
 )
 
+type InvalidHash string
+
+func (e InvalidHash) Error() string {
+	return fmt.Sprintf("blurhash: %s", string(e))
+}
+
+// Components decodes and returns the number of x and y components in the given Blurhash.
 func Components(hash string) (xComp, yComp int, err error) {
 	if len(hash) < 6 {
-		return 0, 0, fmt.Errorf("blurhash: Hash is invalid (too short)")
+		return 0, 0, InvalidHash("hash is invalid (too short)")
 	}
 
 	sizeFlag, err := base83.Decode(string(hash[0]))
@@ -22,12 +29,14 @@ func Components(hash string) (xComp, yComp int, err error) {
 	xComp = (sizeFlag % 9) + 1
 
 	if len(hash) != 4+2*xComp*yComp {
-		return 0, 0, fmt.Errorf("blurhash: Hash is invalid (length mismatch)")
+		return 0, 0, InvalidHash("hash is invalid (length mismatch)")
 	}
 
 	return xComp, yComp, nil
 }
 
+// Decode generates an image of the given Blurhash with a size of width and height.
+// Punch is a multiplier that adjusts the contrast of the resulting image.
 func Decode(hash string, width, height, punch int) (image.Image, error) {
 	xComp, yComp, err := Components(hash)
 	if err != nil {
@@ -67,17 +76,16 @@ func Decode(hash string, width, height, punch int) (image.Image, error) {
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			var r, g, b float64
-
 			for j := 0; j < yComp; j++ {
 				for i := 0; i < xComp; i++ {
-					basis := math.Cos(math.Pi * float64(x) * float64(i) / float64(width)) * math.Cos(math.Pi * float64(y) * float64(j) / float64(height))
+					basis := math.Cos(math.Pi * float64(x) * float64(i) / float64(width)) *
+						math.Cos(math.Pi * float64(y) * float64(j) / float64(height))
 					pcolor := colors[i + j * xComp]
 					r += pcolor[0] * basis
 					g += pcolor[1] * basis
 					b += pcolor[2] * basis
  				}
 			}
-
 			img.SetNRGBA(x, y, color.NRGBA{R: uint8(linearTosRGB(r)), G: uint8(linearTosRGB(g)), B: uint8(linearTosRGB(b)), A: 255})
 		}
 	}

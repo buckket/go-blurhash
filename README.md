@@ -1,4 +1,4 @@
-# go-blurhash
+# go-blurhash [![Build Status](https://travis-ci.org/buckket/go-blurhash.svg)](https://travis-ci.org/buckket/go-blurhash) [![GoDoc](https://godoc.org/github.com/buckket/go-blurhash?status.svg)](https://godoc.org/github.com/buckket/go-blurhash) [![Go Report Card](https://goreportcard.com/badge/github.com/buckket/go-blurhash)](https://goreportcard.com/report/github.com/buckket/go-blurhash)
 
 **go-blurhash** is a pure Go implementation of the Blurhash algorithm, which is used by
 [Mastodon](https://github.com/tootsuite/mastodon) an other Fediverse software to implement a swift way of preloading images as well
@@ -21,17 +21,14 @@ Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 
     go get -u git.buckket.org/buckket/go-blurhash
 
-
-
 ## Usage
 
 go-blurhash exports three functions:
-- blurhash.Encode()
-- blurhash.Decodde()
-- blurhash.Components()
+- blurhash.Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
+- blurhash.Decode(hash string, width, height, punch int) (image.Image, error)
+- blurhash.Components(hash string) (xComp, yComp int, err error)
 
-Here’s a simple demonstration, till the documentation catches up:
-
+Here’s a simple demonstration. Check [GoDoc](https://godoc.org/github.com/buckket/go-blurhash) for the full documentation.
 
 ```go
 package main
@@ -44,22 +41,31 @@ import (
 )
 
 func main() {
-	// Encode an image
+	// Generate the Blurhash for a given image
 	imageFile, _ := os.Open("test.png")
 	loadedImage, err := png.Decode(imageFile)
 	str, _ := blurhash.Encode(4, 3, &loadedImage)
 	if err != nil {
-		// Handling errors
+		// Handle errors
 	}
-	fmt.Printf("Hash: %s", str)
+	fmt.Printf("Hash: %s\n", str)
 
-	// Generating an image
+	// Generate an image for a given Blurhash
+	// Width will be 300px and Height will be 500px
+	// Punch specifies the contrasts and defaults to 1
 	img, err := blurhash.Decode(str, 300, 500, 1)
 	if err != nil {
-		// Handling errors
+		// Handle errors
 	}
 	f, _ := os.Create("test_blur.png")
 	_ = png.Encode(f, img)
+	
+	// Get the x and y components used for encoding a given Blurhash
+	x, y, err := blurhash.Components("LFE.@D9F01_2%L%MIVD*9Goe-;WB")
+	if err != nil {
+		// Handle errors
+	}
+	fmt.Sprintf("xComp: %d, yComp: %d", x, y)
 }
 
 ```
@@ -67,7 +73,7 @@ func main() {
 ## Limitations
 
 - Documentation lacking (here, as well as upstream)
-- Automated tests WIP
+- Presumably a bit slower than the C implementation
 
 ## License
 
