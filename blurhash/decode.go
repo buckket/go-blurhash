@@ -8,9 +8,9 @@ import (
 	"math"
 )
 
+// An InvalidHashError occurs when the given hash is either too short or the length does not match its size flag.
 type InvalidHashError string
 
-// An InvalidHashError occurs when the given hash is either too short or the length does not match its size flag.
 func (e InvalidHashError) Error() string {
 	return fmt.Sprintf("blurhash: %s", string(e))
 }
