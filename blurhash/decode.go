@@ -53,7 +53,7 @@ func Decode(hash string, width, height, punch int) (image.Image, error) {
 		punch = 1
 	}
 
-	colors := make([][3] float64, xComp*yComp)
+	colors := make([][3]float64, xComp*yComp)
 
 	for i := range colors {
 		if i == 0 {
@@ -71,20 +71,20 @@ func Decode(hash string, width, height, punch int) (image.Image, error) {
 		}
 	}
 
-	img:= image.NewNRGBA(image.Rect(0, 0, width, height))
+	img := image.NewNRGBA(image.Rect(0, 0, width, height))
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			var r, g, b float64
 			for j := 0; j < yComp; j++ {
 				for i := 0; i < xComp; i++ {
-					basis := math.Cos(math.Pi * float64(x) * float64(i) / float64(width)) *
-						math.Cos(math.Pi * float64(y) * float64(j) / float64(height))
-					pcolor := colors[i + j * xComp]
+					basis := math.Cos(math.Pi*float64(x)*float64(i)/float64(width)) *
+						math.Cos(math.Pi*float64(y)*float64(j)/float64(height))
+					pcolor := colors[i+j*xComp]
 					r += pcolor[0] * basis
 					g += pcolor[1] * basis
 					b += pcolor[2] * basis
- 				}
+				}
 			}
 			img.SetNRGBA(x, y, color.NRGBA{R: uint8(linearTosRGB(r)), G: uint8(linearTosRGB(g)), B: uint8(linearTosRGB(b)), A: 255})
 		}

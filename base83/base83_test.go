@@ -34,7 +34,7 @@ func TestDecode(t *testing.T) {
 	}
 
 	err, ok := err.(base83.InvalidCharacterError)
-	if ! ok {
+	if !ok {
 		t.Fatal("wrong error type")
 	}
 

@@ -47,7 +47,7 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	}
 	blurhash.WriteString(str)
 
-	factors := make([] float64, yComponents*xComponents*3)
+	factors := make([]float64, yComponents*xComponents*3)
 	for y := 0; y < yComponents; y++ {
 		for x := 0; x < xComponents; x++ {
 			factor := multiplyBasisFunction(x, y, rgba)
