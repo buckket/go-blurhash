@@ -37,11 +37,52 @@ func TestDecode(t *testing.T) {
 	if !ok {
 		t.Fatal("wrong error type")
 	}
-
+	_ = err.Error()
 }
 
 func BenchmarkDecode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = base83.Decode("LFE.@D9F01_2%L%MIVD*9Goe-;WB")
+	}
+}
+
+func TestEncode(t *testing.T) {
+	var testCasesValid = []struct {
+		in     int
+		length int
+		out    string
+	}{
+		{0, 0, ""},
+		{163902429697, 6, "foobar"},
+		{100, 2, "1H"},
+	}
+
+	for _, tc := range testCasesValid {
+		t.Run(fmt.Sprintf("%d", tc.in), func(t *testing.T) {
+			out, err := base83.Encode(tc.in, tc.length)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if out != tc.out {
+				t.Fatalf("got %q, wanted %q", out, tc.out)
+			}
+		})
+	}
+
+	_, err := base83.Encode(84, 1)
+	if err == nil {
+		t.Fatal("should have failed")
+	}
+
+	err, ok := err.(base83.InvalidLengthError)
+	if !ok {
+		t.Fatal("wrong error type")
+	}
+	_ = err.Error()
+}
+
+func BenchmarkEncode(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = base83.Encode(163902429697, 6)
 	}
 }

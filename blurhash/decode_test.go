@@ -23,19 +23,21 @@ func TestComponents(t *testing.T) {
 	if err == nil {
 		t.Fatal("should have failed")
 	}
-	_, ok := err.(blurhash.InvalidHash)
+	err, ok := err.(blurhash.InvalidHashError)
 	if !ok {
 		t.Fatal("wrong error type")
 	}
+	_ = err.Error()
 
 	_, _, err = blurhash.Components(str[:9])
 	if err == nil {
 		t.Fatal("should have failed")
 	}
-	_, ok = err.(blurhash.InvalidHash)
+	err, ok = err.(blurhash.InvalidHashError)
 	if !ok {
 		t.Fatal("wrong error type")
 	}
+	_ = err.Error()
 }
 
 func TestDecodeFile(t *testing.T) {

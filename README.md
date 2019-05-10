@@ -1,4 +1,4 @@
-# go-blurhash [![Build Status](https://travis-ci.org/buckket/go-blurhash.svg)](https://travis-ci.org/buckket/go-blurhash) [![GoDoc](https://godoc.org/github.com/buckket/go-blurhash?status.svg)](https://godoc.org/github.com/buckket/go-blurhash) [![Go Report Card](https://goreportcard.com/badge/github.com/buckket/go-blurhash)](https://goreportcard.com/report/github.com/buckket/go-blurhash)
+# go-blurhash [![Build Status](https://travis-ci.org/buckket/go-blurhash.svg)](https://travis-ci.org/buckket/go-blurhash) [![Go Report Card](https://goreportcard.com/badge/github.com/buckket/go-blurhash)](https://goreportcard.com/report/github.com/buckket/go-blurhash) [![codecov](https://codecov.io/gh/buckket/go-blurhash/branch/master/graph/badge.svg)](https://codecov.io/gh/buckket/go-blurhash) [![GoDoc](https://godoc.org/github.com/buckket/go-blurhash?status.svg)](https://godoc.org/github.com/buckket/go-blurhash)
 
 **go-blurhash** is a pure Go implementation of the Blurhash algorithm, which is used by
 [Mastodon](https://github.com/tootsuite/mastodon) an other Fediverse software to implement a swift way of preloading images as well

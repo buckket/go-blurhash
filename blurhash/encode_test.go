@@ -57,10 +57,11 @@ func TestEncodeWrongParameters(t *testing.T) {
 			if err == nil {
 				t.Fatal("should have failed")
 			}
-			_, ok := err.(blurhash.InvalidParameterError)
+			err, ok := err.(blurhash.InvalidParameterError)
 			if !ok {
 				t.Fatal("wrong error type")
 			}
+			_ = err.Error()
 		})
 	}
 }

@@ -8,16 +8,17 @@ import (
 	"math"
 )
 
-type InvalidHash string
+type InvalidHashError string
 
-func (e InvalidHash) Error() string {
+// An InvalidHashError occurs when the given hash is either too short or the length does not match its size flag.
+func (e InvalidHashError) Error() string {
 	return fmt.Sprintf("blurhash: %s", string(e))
 }
 
 // Components decodes and returns the number of x and y components in the given Blurhash.
 func Components(hash string) (xComp, yComp int, err error) {
 	if len(hash) < 6 {
-		return 0, 0, InvalidHash("hash is invalid (too short)")
+		return 0, 0, InvalidHashError("hash is invalid (too short)")
 	}
 
 	sizeFlag, err := base83.Decode(string(hash[0]))
@@ -29,7 +30,7 @@ func Components(hash string) (xComp, yComp int, err error) {
 	xComp = (sizeFlag % 9) + 1
 
 	if len(hash) != 4+2*xComp*yComp {
-		return 0, 0, InvalidHash("hash is invalid (length mismatch)")
+		return 0, 0, InvalidHashError("hash is invalid (length mismatch)")
 	}
 
 	return xComp, yComp, nil

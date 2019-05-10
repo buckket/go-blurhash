@@ -15,11 +15,11 @@ func (e InvalidCharacterError) Error() string {
 	return fmt.Sprintf("base83: invalid string (character %q out of range)", rune(e))
 }
 
-// An InvalidLengthError occurs when a given string needs more characters than length to encode successfully.
+// An InvalidLengthError occurs when a given value cannot be encoded to a string of given length.
 type InvalidLengthError int
 
 func (e InvalidLengthError) Error() string {
-	return fmt.Sprintf("base83: invalid length (%d is too short to encode value)", int(e))
+	return fmt.Sprintf("base83: invalid length (%d)", int(e))
 }
 
 // Encode will encode the given integer value to a base83 string with given length.
@@ -34,6 +34,9 @@ func Encode(value, length int) (string, error) {
 	var str strings.Builder
 	str.Grow(length)
 	for i := 0; i < length; i++ {
+		if divisor == 0 {
+			return "", InvalidLengthError(length)
+		}
 		digit := (value / divisor) % 83
 		divisor /= 83
 		str.WriteRune(rune(characters[digit]))
