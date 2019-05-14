@@ -7,13 +7,19 @@ as hiding sensitive media. Read more about it [here](https://blog.joinmastodon.o
 This library allows generating the Blurhash of a given image, as well as
 reconstructing a blurred version with specified dimensions from a given Blurhash.
 
-This library is based entirely on the current reference implementations<sup>[1](#note1)</sup>:
+This library is based entirely on the current reference implementations:
 - Encoder: https://github.com/Gargron/blurhash (C, Ruby)
 - Deocder: https://github.com/Gargron/blurhash.js (TypeScript)
 
 Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 
-<a name="note">1</a>: Because there is no real spec as of yet.
+|        | Before                         | After                          |
+| ------ |:------------------------------:| :-----------------------------:|
+| Image  | ![alt text][test]              | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" |
+| Hash   | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" | ![alt text][test_blur]
+
+[test]: test.png "Blurhash example input."
+[test_blur]: test_blur.png "Blurhash example output"
 
 ## Installation
 
@@ -35,7 +41,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/buckket/go-blurhash/blurhash"
+	"github.com/buckket/go-blurhash"
 	"image/png"
 	"os"
 )
@@ -65,14 +71,13 @@ func main() {
 	if err != nil {
 		// Handle errors
 	}
-	fmt.Sprintf("xComp: %d, yComp: %d", x, y)
+	fmt.Printf("xComp: %d, yComp: %d", x, y)
 }
 
 ```
 
 ## Limitations
 
-- Documentation lacking (here, as well as upstream)
 - Presumably a bit slower than the C implementation
 
 ## License

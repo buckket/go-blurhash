@@ -1,7 +1,8 @@
 package blurhash_test
 
 import (
-	"github.com/buckket/go-blurhash/blurhash"
+	"fmt"
+	"github.com/buckket/go-blurhash"
 	"image/color"
 	"image/png"
 	"os"
@@ -43,7 +44,7 @@ func TestComponents(t *testing.T) {
 func TestDecodeFile(t *testing.T) {
 	const str = "LFE.@D9F01_2%L%MIVD*9Goe-;WB"
 
-	imageFile, err := os.Open("../test_blur.png")
+	imageFile, err := os.Open("test_blur.png")
 	if err != nil {
 		t.Fatal("could not load test_blur.png")
 	}
@@ -53,7 +54,7 @@ func TestDecodeFile(t *testing.T) {
 		t.Fatal("could not decode test_blur.png")
 	}
 
-	img, err := blurhash.Decode(str, 300, 300, 1)
+	img, err := blurhash.Decode(str, 204, 204, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,4 +98,23 @@ func BenchmarkDecode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = blurhash.Decode(str, 300, 300, 1)
 	}
+}
+
+func ExampleDecode() {
+	img, err := blurhash.Decode("LFE.@D9F01_2%L%MIVD*9Goe-;WB", 204, 204, 1)
+	if err != nil {
+		// Handling errors
+	}
+	f, _ := os.Create("test_blur.png")
+	_ = png.Encode(f, img)
+}
+
+func ExampleComponents() {
+	x, y, err := blurhash.Components("LFE.@D9F01_2%L%MIVD*9Goe-;WB")
+	if err != nil {
+		// Handle errors
+	}
+	fmt.Printf("xComp: %d, yComp: %d", x, y)
+	// Output:
+	// xComp: 4, yComp: 3
 }

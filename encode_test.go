@@ -2,7 +2,7 @@ package blurhash_test
 
 import (
 	"fmt"
-	"github.com/buckket/go-blurhash/blurhash"
+	"github.com/buckket/go-blurhash"
 	"image"
 	"image/color"
 	"image/draw"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestEncodeFile(t *testing.T) {
-	imageFile, err := os.Open("../test.png")
+	imageFile, err := os.Open("test.png")
 	if err != nil {
 		t.Fatal("could not load test.png")
 	}
@@ -130,7 +130,7 @@ func TestEncodeSingleColor(t *testing.T) {
 }
 
 func BenchmarkEncode(b *testing.B) {
-	imageFile, err := os.Open("../test.png")
+	imageFile, err := os.Open("test.png")
 	if err != nil {
 		b.Fatal("could not load test.png")
 	}
@@ -143,4 +143,16 @@ func BenchmarkEncode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, _ = blurhash.Encode(4, 3, &loadedImage)
 	}
+}
+
+func ExampleEncode() {
+	imageFile, _ := os.Open("test.png")
+	loadedImage, err := png.Decode(imageFile)
+	str, err := blurhash.Encode(4, 3, &loadedImage)
+	if err != nil {
+		// Handle errors
+	}
+	fmt.Printf("Hash: %s", str)
+	// Output:
+	// Hash: LFE.@D9F01_2%L%MIVD*9Goe-;WB
 }
