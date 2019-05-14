@@ -114,7 +114,7 @@ func ExampleComponents() {
 	if err != nil {
 		// Handle errors
 	}
-	fmt.Printf("xComp: %d, yComp: %d", x, y)
+	fmt.Printf("xComponents: %d, yComponents: %d", x, y)
 	// Output:
-	// xComp: 4, yComp: 3
+	// xComponents: 4, yComponents: 3
 }

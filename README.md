@@ -31,9 +31,9 @@ Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 
 go-blurhash exports three functions:
 ```go
-func blurhash.Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
+func blurhash.Encode(xComponents, yComponents int, rgba *image.Image) (string, error)
 func blurhash.Decode(hash string, width, height, punch int) (image.Image, error)
-func blurhash.Components(hash string) (xComp, yComp int, err error)
+func blurhash.Components(hash string) (xComponents, yComponents int, err error)
 ```
 
 Here’s a simple demonstration. Check [GoDoc](https://godoc.org/github.com/buckket/go-blurhash) for the full documentation.
@@ -73,9 +73,8 @@ func main() {
 	if err != nil {
 		// Handle errors
 	}
-	fmt.Printf("xComp: %d, yComp: %d", x, y)
+	fmt.Printf("xComponents: %d, yComponents: %d", x, y)
 }
-
 ```
 
 ## Limitations

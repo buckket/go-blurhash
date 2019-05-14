@@ -16,7 +16,7 @@ func (e InvalidHashError) Error() string {
 }
 
 // Components decodes and returns the number of x and y components in the given Blurhash.
-func Components(hash string) (xComp, yComp int, err error) {
+func Components(hash string) (xComponents, yComponents int, err error) {
 	if len(hash) < 6 {
 		return 0, 0, InvalidHashError("hash is invalid (too short)")
 	}
@@ -26,14 +26,14 @@ func Components(hash string) (xComp, yComp int, err error) {
 		return 0, 0, err
 	}
 
-	yComp = (sizeFlag / 9) + 1
-	xComp = (sizeFlag % 9) + 1
+	yComponents = (sizeFlag / 9) + 1
+	xComponents = (sizeFlag % 9) + 1
 
-	if len(hash) != 4+2*xComp*yComp {
+	if len(hash) != 4+2*xComponents*yComponents {
 		return 0, 0, InvalidHashError("hash is invalid (length mismatch)")
 	}
 
-	return xComp, yComp, nil
+	return xComponents, yComponents, nil
 }
 
 // Decode generates an image of the given Blurhash with a size of width and height.
