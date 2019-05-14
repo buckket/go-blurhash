@@ -13,10 +13,10 @@ This library is based entirely on the current reference implementations:
 
 Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 
-|        | Before                         | After                          |
-| ------ |:------------------------------:| :-----------------------------:|
-| Image  | ![alt text][test]              | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" |
-| Hash   | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" | ![alt text][test_blur]
+|            | Before                         | After                          |
+| ---------- |:------------------------------:| :-----------------------------:|
+| **Image**  | ![alt text][test]              | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" |
+| **Hash**   | "LFE.@D9F01_2%L%MIVD*9Goe-;WB" | ![alt text][test_blur]
 
 [test]: test.png "Blurhash example input."
 [test_blur]: test_blur.png "Blurhash example output"
@@ -30,9 +30,11 @@ Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
 ## Usage
 
 go-blurhash exports three functions:
-- blurhash.Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
-- blurhash.Decode(hash string, width, height, punch int) (image.Image, error)
-- blurhash.Components(hash string) (xComp, yComp int, err error)
+```go
+func blurhash.Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
+func blurhash.Decode(hash string, width, height, punch int) (image.Image, error)
+func blurhash.Components(hash string) (xComp, yComp int, err error)
+```
 
 Here’s a simple demonstration. Check [GoDoc](https://godoc.org/github.com/buckket/go-blurhash) for the full documentation.
 
