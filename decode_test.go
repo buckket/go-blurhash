@@ -95,14 +95,18 @@ func TestDecodeSingleColor(t *testing.T) {
 func TestDecodeInvalidInput(t *testing.T) {
 	testCases := []string{
 		"00OZZy1",
-		"0µOZZy",
-		"00µZZy",
-		"LFE.@DµF01_2%L%MIVD*9Goe-;WB",
+		"\x000OZZy",
+		"0\x00OZZy",
+		"00\x00ZZy",
+		"00O\x00Zy",
+		"00OZ\x00y",
+		"00OZZ\x00",
+		"LFE.@D\x00F01_2%L%MIVD*9Goe-;WB",
 	}
 
 	for _, tc := range testCases {
 		t.Run(fmt.Sprintf("str: %s", tc), func(t *testing.T) {
-			_, err := blurhash.Decode(tc, 1, 1, 1)
+			_, err := blurhash.Decode(tc, 32, 32, 1)
 			if err == nil {
 				t.Fatal("should have failed")
 			}
