@@ -69,16 +69,29 @@ func TestEncode(t *testing.T) {
 		})
 	}
 
-	_, err := base83.Encode(84, 1)
-	if err == nil {
-		t.Fatal("should have failed")
+	var testCasesInvalid = []struct {
+		in     int
+		length int
+	}{
+		{84, 1},
+		{-1597651267176502418, 16},
+		{163902429697, 10},
 	}
 
-	err, ok := err.(base83.InvalidLengthError)
-	if !ok {
-		t.Fatal("wrong error type")
+	for _, tc := range testCasesInvalid {
+		t.Run(fmt.Sprintf("%d", tc.in), func(t *testing.T) {
+			_, err := base83.Encode(tc.in, tc.length)
+			if err == nil {
+				t.Fatal("should have failed")
+			}
+
+			err, ok := err.(base83.InvalidLengthError)
+			if !ok {
+				t.Fatal("wrong error type")
+			}
+			_ = err.Error()
+		})
 	}
-	_ = err.Error()
 }
 
 func BenchmarkEncode(b *testing.B) {

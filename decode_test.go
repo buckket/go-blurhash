@@ -79,7 +79,7 @@ func TestDecodeFile(t *testing.T) {
 func TestDecodeSingleColor(t *testing.T) {
 	const str = "00OZZy"
 
-	img, err := blurhash.Decode(str, 1, 1, 1)
+	img, err := blurhash.Decode(str, 1, 1, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -89,6 +89,24 @@ func TestDecodeSingleColor(t *testing.T) {
 	tcolor := color.RGBA{213, 30, 120, 255}
 	if bcolor != tcolor {
 		t.Fatal("color mismatch")
+	}
+}
+
+func TestDecodeInvalidInput(t *testing.T) {
+	testCases := []string{
+		"00OZZy1",
+		"0µOZZy",
+		"00µZZy",
+		"LFE.@DµF01_2%L%MIVD*9Goe-;WB",
+	}
+
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("str: %s", tc), func(t *testing.T) {
+			_, err := blurhash.Decode(tc, 1, 1, 1)
+			if err == nil {
+				t.Fatal("should have failed")
+			}
+		})
 	}
 }
 

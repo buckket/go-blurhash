@@ -34,7 +34,7 @@ func Encode(value, length int) (string, error) {
 	var str strings.Builder
 	str.Grow(length)
 	for i := 0; i < length; i++ {
-		if divisor == 0 {
+		if divisor <= 0 {
 			return "", InvalidLengthError(length)
 		}
 		digit := (value / divisor) % 83
