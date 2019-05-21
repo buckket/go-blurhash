@@ -42,7 +42,7 @@ func TestDecode(t *testing.T) {
 
 func BenchmarkDecode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = base83.Decode("LFE.@D9F01_2%L%MIVD*9Goe-;WB")
+		_, _ = base83.Decode("~$")
 	}
 }
 
@@ -96,6 +96,6 @@ func TestEncode(t *testing.T) {
 
 func BenchmarkEncode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = base83.Encode(163902429697, 6)
+		_, _ = base83.Encode(6869, 2)
 	}
 }

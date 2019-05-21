@@ -118,7 +118,15 @@ func BenchmarkDecode(b *testing.B) {
 	const str = "LFE.@D9F01_2%L%MIVD*9Goe-;WB"
 
 	for i := 0; i < b.N; i++ {
-		_, _ = blurhash.Decode(str, 300, 300, 1)
+		_, _ = blurhash.Decode(str, 32, 32, 1)
+	}
+}
+
+func BenchmarkComponents(b *testing.B) {
+	const str = "LFE.@D9F01_2%L%MIVD*9Goe-;WB"
+
+	for i := 0; i < b.N; i++ {
+		_, _, _ = blurhash.Components(str)
 	}
 }
 
