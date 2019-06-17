@@ -147,7 +147,7 @@ func BenchmarkEncode(b *testing.B) {
 
 func ExampleEncode() {
 	imageFile, _ := os.Open("test.png")
-	loadedImage, err := png.Decode(imageFile)
+	loadedImage, _ := png.Decode(imageFile)
 	str, err := blurhash.Encode(4, 3, &loadedImage)
 	if err != nil {
 		// Handle errors
