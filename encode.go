@@ -47,10 +47,12 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	}
 	blurhash.WriteString(str)
 
+	linearized := linearizeImage(rgba)
+
 	factors := make([]float64, yComponents*xComponents*3)
 	for y := 0; y < yComponents; y++ {
 		for x := 0; x < xComponents; x++ {
-			factor := multiplyBasisFunction(x, y, rgba)
+			factor := multiplyBasisFunction(x, y, rgba, linearized)
 			factors[0+x*3+y*3*xComponents] = factor[0]
 			factors[1+x*3+y*3*xComponents] = factor[1]
 			factors[2+x*3+y*3*xComponents] = factor[2]
@@ -101,7 +103,32 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	return blurhash.String(), nil
 }
 
-func multiplyBasisFunction(xComponent int, yComponent int, rgba *image.Image) [3]float64 {
+type linearRGB struct {
+	R, G, B float64
+}
+
+func linearizeImage(rgba *image.Image) (linearized [][]linearRGB) {
+	height := (*rgba).Bounds().Max.Y
+	width := (*rgba).Bounds().Max.X
+
+	linearized = make([][]linearRGB, height)
+	for row := range linearized {
+		linearized[row] = make([]linearRGB, width)
+	}
+
+	for y := 0; y < height; y++ {
+		for x :=0; x < width; x++ {
+			rt, gt, bt, _ := (*rgba).At(x, y).RGBA()
+			linearized[y][x].R = sRGBToLinear(int(rt>>8))
+			linearized[y][x].G = sRGBToLinear(int(gt>>8))
+			linearized[y][x].B = sRGBToLinear(int(bt>>8))
+		}
+	}
+
+	return
+}
+
+func multiplyBasisFunction(xComponent int, yComponent int, rgba *image.Image, linearized [][]linearRGB) [3]float64 {
 	var r, g, b float64
 
 	height := (*rgba).Bounds().Max.Y
@@ -114,14 +141,25 @@ func multiplyBasisFunction(xComponent int, yComponent int, rgba *image.Image) [3
 		normalisation = 2
 	}
 
+	xvalues := make([]float64, width)
+
+	for x := 0; x < width; x++ {
+		xvalues[x] = math.Cos(math.Pi*float64(xComponent)*float64(x)/float64(width))
+	}
+
+	yvalues := make([]float64, height)
+
+	for y := 0; y < height; y++ {
+		yvalues[y] = math.Cos(math.Pi*float64(yComponent)*float64(y)/float64(height))
+	}
+
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			basis := math.Cos(math.Pi*float64(xComponent)*float64(x)/float64(width)) *
-				math.Cos(math.Pi*float64(yComponent)*float64(y)/float64(height))
-			rt, gt, bt, _ := (*rgba).At(x, y).RGBA()
-			r += basis * sRGBToLinear(int(rt>>8))
-			g += basis * sRGBToLinear(int(gt>>8))
-			b += basis * sRGBToLinear(int(bt>>8))
+			basis := xvalues[x] * yvalues[y]
+
+			r += basis * linearized[y][x].R
+			g += basis * linearized[y][x].G
+			b += basis * linearized[y][x].B
 		}
 	}
 
