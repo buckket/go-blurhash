@@ -8,6 +8,18 @@ import (
 	"strings"
 )
 
+func init() {
+	initLinearTable(channelToLinear[:])
+}
+
+var channelToLinear [256]float64
+
+func initLinearTable(table []float64) {
+	for i := range table {
+		channelToLinear[i] = sRGBToLinear(i)
+	}
+}
+
 // An InvalidParameterError occurs when an invalid argument is passed to either the Decode or Encode function.
 type InvalidParameterError struct {
 	value     int
@@ -47,17 +59,8 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	}
 	blurhash.WriteString(str)
 
-	linearized := linearizeImage(rgba)
-
 	factors := make([]float64, yComponents*xComponents*3)
-	for y := 0; y < yComponents; y++ {
-		for x := 0; x < xComponents; x++ {
-			factor := multiplyBasisFunction(x, y, rgba, linearized)
-			factors[0+x*3+y*3*xComponents] = factor[0]
-			factors[1+x*3+y*3*xComponents] = factor[1]
-			factors[2+x*3+y*3*xComponents] = factor[2]
-		}
-	}
+	multiplyBasisFunction(rgba, factors, xComponents, yComponents)
 
 	var maximumValue float64
 	var quantisedMaximumValue int
@@ -103,68 +106,50 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	return blurhash.String(), nil
 }
 
-type linearRGB struct {
-	R, G, B float64
-}
-
-func linearizeImage(rgba *image.Image) (linearized [][]linearRGB) {
+func multiplyBasisFunction(rgba *image.Image, factors []float64, xComponents int, yComponents int) {
 	height := (*rgba).Bounds().Max.Y
 	width := (*rgba).Bounds().Max.X
 
-	linearized = make([][]linearRGB, height)
-	for row := range linearized {
-		linearized[row] = make([]linearRGB, width)
-	}
-
-	for y := 0; y < height; y++ {
-		for x :=0; x < width; x++ {
-			rt, gt, bt, _ := (*rgba).At(x, y).RGBA()
-			linearized[y][x].R = sRGBToLinear(int(rt>>8))
-			linearized[y][x].G = sRGBToLinear(int(gt>>8))
-			linearized[y][x].B = sRGBToLinear(int(bt>>8))
+	xvalues := make([][]float64, xComponents)
+	for xComponent := 0; xComponent < xComponents; xComponent++ {
+		xvalues[xComponent] = make([]float64, width)
+		for x := 0; x < width; x++ {
+			xvalues[xComponent][x] = math.Cos(math.Pi * float64(xComponent) * float64(x) / float64(width))
 		}
 	}
 
-	return
-}
-
-func multiplyBasisFunction(xComponent int, yComponent int, rgba *image.Image, linearized [][]linearRGB) [3]float64 {
-	var r, g, b float64
-
-	height := (*rgba).Bounds().Max.Y
-	width := (*rgba).Bounds().Max.X
-
-	var normalisation float64
-	if xComponent == 0 && yComponent == 0 {
-		normalisation = 1
-	} else {
-		normalisation = 2
-	}
-
-	xvalues := make([]float64, width)
-
-	for x := 0; x < width; x++ {
-		xvalues[x] = math.Cos(math.Pi*float64(xComponent)*float64(x)/float64(width))
-	}
-
-	yvalues := make([]float64, height)
-
-	for y := 0; y < height; y++ {
-		yvalues[y] = math.Cos(math.Pi*float64(yComponent)*float64(y)/float64(height))
+	yvalues := make([][]float64, yComponents)
+	for yComponent := 0; yComponent < yComponents; yComponent++ {
+		yvalues[yComponent] = make([]float64, width)
+		for y := 0; y < width; y++ {
+			yvalues[yComponent][y] = math.Cos(math.Pi * float64(yComponent) * float64(y) / float64(width))
+		}
 	}
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			basis := xvalues[x] * yvalues[y]
+			rt, gt, bt, _ := (*rgba).At(x, y).RGBA()
+			lr := channelToLinear[rt>>8]
+			lg := channelToLinear[gt>>8]
+			lb := channelToLinear[bt>>8]
 
-			r += basis * linearized[y][x].R
-			g += basis * linearized[y][x].G
-			b += basis * linearized[y][x].B
+			for yc := 0; yc < yComponents; yc++ {
+				for xc := 0; xc < xComponents; xc++ {
+
+					scale := 1 / float64(width*height)
+
+					if xc != 0 || yc != 0 {
+						scale = 2 / float64(width*height)
+					}
+
+					basis := xvalues[xc][x] * yvalues[yc][y]
+					factors[0+xc*3+yc*3*xComponents] += lr * basis * scale
+					factors[1+xc*3+yc*3*xComponents] += lg * basis * scale
+					factors[2+xc*3+yc*3*xComponents] += lb * basis * scale
+				}
+			}
 		}
 	}
-
-	scale := normalisation / float64(width*height)
-	return [3]float64{r * scale, g * scale, b * scale}
 }
 
 func encodeDC(r, g, b float64) int {
