@@ -122,7 +122,7 @@ func multiplyBasisFunction(rgba *image.Image, factors []float64, xComponents int
 	for yComponent := 0; yComponent < yComponents; yComponent++ {
 		yvalues[yComponent] = make([]float64, height)
 		for y := 0; y < height; y++ {
-			yvalues[yComponent][y] = math.Cos(math.Pi * float64(yComponent) * float64(y) / float64(width))
+			yvalues[yComponent][y] = math.Cos(math.Pi * float64(yComponent) * float64(y) / float64(height))
 		}
 	}
 
