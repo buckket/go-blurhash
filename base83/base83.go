@@ -8,7 +8,7 @@ import (
 
 const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%*+,-.:;=?@[]^_{|}~"
 
-// An InvalidCharacterError occurs when a characters is found which is not part of the base83 character set.
+// An InvalidCharacterError occurs when a characters is found which is not part of the Base83 character set.
 type InvalidCharacterError rune
 
 func (e InvalidCharacterError) Error() string {
@@ -22,7 +22,7 @@ func (e InvalidLengthError) Error() string {
 	return fmt.Sprintf("base83: invalid length (%d)", int(e))
 }
 
-// Encode will encode the given integer value to a base83 string with given length.
+// Encode will encode the given integer value to a Base83 string with given length.
 // If length is too short to encode the given value InvalidLengthError will be returned.
 func Encode(value, length int) (string, error) {
 	divisor := int(math.Pow(83, float64(length)))
@@ -45,7 +45,7 @@ func Encode(value, length int) (string, error) {
 	return str.String(), nil
 }
 
-// Decode will decode the given base83 string to an integer.
+// Decode will decode the given Base83 string to an integer.
 func Decode(str string) (value int, err error) {
 	for _, r := range str {
 		idx := strings.IndexRune(characters, r)

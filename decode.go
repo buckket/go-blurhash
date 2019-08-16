@@ -15,7 +15,7 @@ func (e InvalidHashError) Error() string {
 	return fmt.Sprintf("blurhash: %s", string(e))
 }
 
-// Components decodes and returns the number of x and y components in the given Blurhash.
+// Components decodes and returns the number of x and y components in the given BlurHash.
 func Components(hash string) (xComponents, yComponents int, err error) {
 	if len(hash) < 6 {
 		return 0, 0, InvalidHashError("hash is invalid (too short)")
@@ -36,7 +36,7 @@ func Components(hash string) (xComponents, yComponents int, err error) {
 	return xComponents, yComponents, nil
 }
 
-// Decode generates an image of the given Blurhash with a size of width and height.
+// Decode generates an image of the given BlurHash with a size of width and height.
 // Punch is a multiplier that adjusts the contrast of the resulting image.
 func Decode(hash string, width, height, punch int) (image.Image, error) {
 	xComp, yComp, err := Components(hash)
