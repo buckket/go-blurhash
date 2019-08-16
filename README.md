@@ -1,17 +1,19 @@
 # go-blurhash [![Build Status](https://travis-ci.org/buckket/go-blurhash.svg)](https://travis-ci.org/buckket/go-blurhash) [![Go Report Card](https://goreportcard.com/badge/github.com/buckket/go-blurhash)](https://goreportcard.com/report/github.com/buckket/go-blurhash) [![codecov](https://codecov.io/gh/buckket/go-blurhash/branch/master/graph/badge.svg)](https://codecov.io/gh/buckket/go-blurhash) [![GoDoc](https://godoc.org/github.com/buckket/go-blurhash?status.svg)](https://godoc.org/github.com/buckket/go-blurhash)
 
-**go-blurhash** is a pure Go implementation of the Blurhash algorithm, which is used by
+**go-blurhash** is a pure Go implementation of the [BlurHash](https://github.com/woltapp/blurhash) algorithm, which is used by
 [Mastodon](https://github.com/tootsuite/mastodon) an other Fediverse software to implement a swift way of preloading images as well
 as hiding sensitive media. Read more about it [here](https://blog.joinmastodon.org/2019/05/improving-support-for-adult-content-on-mastodon/).
 
-This library allows generating the Blurhash of a given image, as well as
-reconstructing a blurred version with specified dimensions from a given Blurhash.
+**tl;dr:** BlurHash is a compact representation of a placeholder for an image.
+
+This library allows generating the BlurHash of a given image, as well as
+reconstructing a blurred version with specified dimensions from a given BlurHash.
 
 This library is based entirely on the current reference implementations:
-- Encoder: https://github.com/Gargron/blurhash (C, Ruby)
-- Deocder: https://github.com/Gargron/blurhash.js (TypeScript)
+- Encoder: [https://github.com/woltapp/blurhash/blob/master/C]() (C)
+- Deocder: [https://github.com/woltapp/blurhash/blob/master/TypeScript]() (TypeScript)
 
-Blurhash is written by [Dag Ågren](https://github.com/DagAgren).
+BlurHash is written by [Dag Ågren](https://github.com/DagAgren) / [Wolt](https://github.com/woltapp).
 
 |            | Before                         | After                          |
 | ---------- |:------------------------------:| :-----------------------------:|
@@ -80,6 +82,11 @@ func main() {
 ## Limitations
 
 - Presumably a bit slower than the C implementation
+
+## Notes
+
+- As mentioned [here](https://github.com/woltapp/blurhash#how-fast-is-encoding-decoding), it’s best to
+generate very small images (~32x32px) via BlurHash and scale them up to the desired dimensions afterwards for optimal performance.
 
 ## License
 
