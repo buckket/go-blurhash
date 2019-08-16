@@ -10,12 +10,12 @@ import (
 
 // An InvalidParameterError occurs when an invalid argument is passed to either the Decode or Encode function.
 type InvalidParameterError struct {
-	value     int
-	parameter string
+	Value     int
+	Parameter string
 }
 
 func (e InvalidParameterError) Error() string {
-	return fmt.Sprintf("blurhash: %sComponents (%d) must be element of [1-9]", e.parameter, e.value)
+	return fmt.Sprintf("blurhash: %sComponents (%d) must be element of [1-9]", e.Parameter, e.Value)
 }
 
 // An EncodingError represents an error that occurred during the encoding of the given value.
