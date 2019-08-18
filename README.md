@@ -10,8 +10,8 @@ This library allows generating the BlurHash of a given image, as well as
 reconstructing a blurred version with specified dimensions from a given BlurHash.
 
 This library is based entirely on the current reference implementations:
-- Encoder: [https://github.com/woltapp/blurhash/blob/master/C]() (C)
-- Deocder: [https://github.com/woltapp/blurhash/blob/master/TypeScript]() (TypeScript)
+- Encoder: [https://github.com/woltapp/blurhash/blob/master/C](https://github.com/woltapp/blurhash/blob/master/C) (C)
+- Deocder: [https://github.com/woltapp/blurhash/blob/master/TypeScript](https://github.com/woltapp/blurhash/blob/master/TypeScript) (TypeScript)
 
 BlurHash is written by [Dag Ågren](https://github.com/DagAgren) / [Wolt](https://github.com/woltapp).
 
@@ -51,7 +51,7 @@ import (
 )
 
 func main() {
-	// Generate the Blurhash for a given image
+	// Generate the BlurHash for a given image
 	imageFile, _ := os.Open("test.png")
 	loadedImage, err := png.Decode(imageFile)
 	str, _ := blurhash.Encode(4, 3, &loadedImage)
@@ -60,7 +60,7 @@ func main() {
 	}
 	fmt.Printf("Hash: %s\n", str)
 
-	// Generate an image for a given Blurhash
+	// Generate an image for a given BlurHash
 	// Width will be 300px and Height will be 500px
 	// Punch specifies the contrasts and defaults to 1
 	img, err := blurhash.Decode(str, 300, 500, 1)
@@ -70,7 +70,7 @@ func main() {
 	f, _ := os.Create("test_blur.png")
 	_ = png.Encode(f, img)
 	
-	// Get the x and y components used for encoding a given Blurhash
+	// Get the x and y components used for encoding a given BlurHash
 	x, y, err := blurhash.Components("LFE.@D9F01_2%L%MIVD*9Goe-;WB")
 	if err != nil {
 		// Handle errors
