@@ -33,7 +33,7 @@ BlurHash is written by [Dag Ågren](https://github.com/DagAgren) / [Wolt](https:
 
 go-blurhash exports three functions:
 ```go
-func blurhash.Encode(xComponents, yComponents int, rgba *image.Image) (string, error)
+func blurhash.Encode(xComponents, yComponents int, rgba image.Image) (string, error)
 func blurhash.Decode(hash string, width, height, punch int) (image.Image, error)
 func blurhash.Components(hash string) (xComponents, yComponents int, err error)
 ```
@@ -54,7 +54,7 @@ func main() {
 	// Generate the BlurHash for a given image
 	imageFile, _ := os.Open("test.png")
 	loadedImage, err := png.Decode(imageFile)
-	str, _ := blurhash.Encode(4, 3, &loadedImage)
+	str, _ := blurhash.Encode(4, 3, loadedImage)
 	if err != nil {
 		// Handle errors
 	}
@@ -88,6 +88,7 @@ func main() {
 - As mentioned [here](https://github.com/woltapp/blurhash#how-fast-is-encoding-decoding), it’s best to
 generate very small images (~32x32px) via BlurHash and scale them up to the desired dimensions afterwards for optimal performance.
 - Since [#2](https://github.com/buckket/go-blurhash/pull/2) we diverted from the reference implementation by memorizing sRGBtoLinear values, thus increasing encoding speed at the cost of higher memory usage.
+- Starting with v1.1.0 the signature of blurhash.Encode() has changed slightly (see [#3](https://github.com/buckket/go-blurhash/issues/3)).
 
 ## License
 

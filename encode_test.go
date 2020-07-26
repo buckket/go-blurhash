@@ -22,7 +22,7 @@ func TestEncodeFile(t *testing.T) {
 		t.Fatal("could not decode test.png")
 	}
 
-	str, err := blurhash.Encode(4, 3, &loadedImage)
+	str, err := blurhash.Encode(4, 3, loadedImage)
 	if err != nil {
 		t.Fatal(err)
 		return
@@ -53,7 +53,7 @@ func TestEncodeWrongParameters(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(fmt.Sprintf("xComp:%d yComp:%d", tc.xComp, tc.yComp), func(t *testing.T) {
-			_, err := blurhash.Encode(tc.xComp, tc.yComp, &img)
+			_, err := blurhash.Encode(tc.xComp, tc.yComp, img)
 			if err == nil {
 				t.Fatal("should have failed")
 			}
@@ -70,7 +70,7 @@ func TestEncodeEmptyImage(t *testing.T) {
 	var img image.Image
 	img = image.NewNRGBA(image.Rect(0, 0, 100, 100))
 
-	str, err := blurhash.Encode(4, 3, &img)
+	str, err := blurhash.Encode(4, 3, img)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,7 +98,7 @@ func TestEncodeSizeFlag(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(fmt.Sprintf("xComp:%d yComp:%d", tc.xComp, tc.yComp), func(t *testing.T) {
-			str, err := blurhash.Encode(tc.xComp, tc.yComp, &img)
+			str, err := blurhash.Encode(tc.xComp, tc.yComp, img)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -119,7 +119,7 @@ func TestEncodeSingleColor(t *testing.T) {
 	draw.Draw(img, img.Bounds(), &image.Uniform{tcolor}, image.ZP, draw.Src)
 	var img2 image.Image = img
 
-	str, err := blurhash.Encode(1, 1, &img2)
+	str, err := blurhash.Encode(1, 1, img2)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,14 +141,14 @@ func BenchmarkEncode(b *testing.B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		_, _ = blurhash.Encode(4, 3, &loadedImage)
+		_, _ = blurhash.Encode(4, 3, loadedImage)
 	}
 }
 
 func ExampleEncode() {
 	imageFile, _ := os.Open("test.png")
 	loadedImage, _ := png.Decode(imageFile)
-	str, err := blurhash.Encode(4, 3, &loadedImage)
+	str, err := blurhash.Encode(4, 3, loadedImage)
 	if err != nil {
 		// Handle errors
 	}

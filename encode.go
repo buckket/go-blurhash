@@ -41,7 +41,7 @@ func (e EncodingError) Error() string {
 // Encode calculates the Blurhash for an image using the given x and y component counts.
 // The x and y components have to be between 1 and 9 respectively.
 // The image must be of image.Image type.
-func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error) {
+func Encode(xComponents int, yComponents int, rgba image.Image) (string, error) {
 	if xComponents < 1 || xComponents > 9 {
 		return "", InvalidParameterError{xComponents, "x"}
 	}
@@ -106,9 +106,9 @@ func Encode(xComponents int, yComponents int, rgba *image.Image) (string, error)
 	return blurhash.String(), nil
 }
 
-func multiplyBasisFunction(rgba *image.Image, factors []float64, xComponents int, yComponents int) {
-	height := (*rgba).Bounds().Max.Y
-	width := (*rgba).Bounds().Max.X
+func multiplyBasisFunction(rgba image.Image, factors []float64, xComponents int, yComponents int) {
+	height := rgba.Bounds().Max.Y
+	width := rgba.Bounds().Max.X
 
 	xvalues := make([][]float64, xComponents)
 	for xComponent := 0; xComponent < xComponents; xComponent++ {
@@ -128,7 +128,7 @@ func multiplyBasisFunction(rgba *image.Image, factors []float64, xComponents int
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			rt, gt, bt, _ := (*rgba).At(x, y).RGBA()
+			rt, gt, bt, _ := rgba.At(x, y).RGBA()
 			lr := channelToLinear[rt>>8]
 			lg := channelToLinear[gt>>8]
 			lb := channelToLinear[bt>>8]
