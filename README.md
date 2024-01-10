@@ -11,7 +11,7 @@ reconstructing a blurred version with specified dimensions from a given BlurHash
 
 This library is based on the following reference implementations:
 - Encoder: [https://github.com/woltapp/blurhash/blob/master/C](https://github.com/woltapp/blurhash/blob/master/C) (C)
-- Deocder: [https://github.com/woltapp/blurhash/blob/master/TypeScript](https://github.com/woltapp/blurhash/blob/master/TypeScript) (TypeScript)
+- Decoder: [https://github.com/woltapp/blurhash/blob/master/TypeScript](https://github.com/woltapp/blurhash/blob/master/TypeScript) (TypeScript)
 
 BlurHash is written by [Dag Ågren](https://github.com/DagAgren) / [Wolt](https://github.com/woltapp).
 
